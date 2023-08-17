@@ -1,11 +1,13 @@
-package com.parg3v.data.di.modules
+package com.parg3v.data.di.module
 
+import com.parg3v.data.config.NetworkConfig
 import com.parg3v.data.remote.MyApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -16,7 +18,8 @@ object AppModule {
     @Singleton
     fun provideMyApi(): MyApi {
         return Retrofit.Builder()
-            .baseUrl("https://fakestoreapi.com/")
+            .baseUrl(NetworkConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MyApi::class.java)
     }

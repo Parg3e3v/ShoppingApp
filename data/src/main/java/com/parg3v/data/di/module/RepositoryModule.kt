@@ -1,7 +1,7 @@
-package com.parg3v.data.di.modules
+package com.parg3v.data.di.module
 
-import com.parg3v.data.repository.MyRepositoryImpl
-import com.parg3v.domain.repository.MyRepository
+import com.parg3v.data.repository.ProductsRepositoryImpl
+import com.parg3v.domain.repository.ProductsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindMyRepository(
-        myRepository: MyRepositoryImpl
-    ): MyRepository
+        myRepository: ProductsRepositoryImpl
+    ): ProductsRepository
 }

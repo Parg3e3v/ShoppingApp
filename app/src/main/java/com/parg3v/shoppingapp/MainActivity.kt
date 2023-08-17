@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,8 +22,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             ShoppingAppTheme {
                 val viewModel = hiltViewModel<MainViewModel>()
+                val coroutineScope = rememberCoroutineScope()
+                viewModel.state.observe(this) {
+                    println("[LOG] loading data.....")
+                    if (!it.isLoading) {
+                        if (it.error.isNotBlank())
+                            println(it.error)
+                        else {
+                            println("[LOG] Success! your data is -> ${it.products}")
+                        }
+                    }
+                }
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     Greeting("Android")
                 }
             }
