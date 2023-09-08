@@ -1,14 +1,13 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.parg3v.shoppingapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.parg3v.shoppingapp.components.ShoppingItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import com.parg3v.shoppingapp.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,17 +17,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LazyVerticalGrid(columns = GridCells.Adaptive(170.dp)) {
-                items(5) {
-                    for (i in 1..5) {
-                        ShoppingItem(
-                            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                            title = "title",
-                            price = "50.5"
-                        )
-                    }
-                }
-            }
+            Navigation()
         }
         viewModel.state.observe(this) {
             println("[LOG] loading data.....")
@@ -42,4 +31,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
