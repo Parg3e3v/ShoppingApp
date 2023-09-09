@@ -7,6 +7,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.parg3v.shoppingapp.components.CustomScaffold
 import com.parg3v.shoppingapp.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,7 +20,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Navigation()
+            val navController: NavHostController = rememberNavController()
+            CustomScaffold(navController = navController) {
+//                println(
+//                    "route -> ${navController.currentBackStackEntryAsState().value?.destination?.route}"
+//                )
+                Navigation(navController)
+            }
         }
         viewModel.state.observe(this) {
             println("[LOG] loading data.....")
