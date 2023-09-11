@@ -3,7 +3,7 @@ package com.parg3v.data.model
 data class ProductModel(
     val id: Int,
     val title: String,
-    val price: Double,
+    val price: Float,
     val description: String,
     val category: String,
     val image: String,
@@ -11,6 +11,6 @@ data class ProductModel(
 )
 
 data class Rating(
-    val rate: Double,
+    val rate: Float,
     val count: Int
 )

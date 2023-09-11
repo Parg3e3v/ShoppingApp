@@ -17,7 +17,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.parg3v.shoppingapp.model.BottomNavItem
-import com.parg3v.shoppingapp.ui.theme.ButtonSelected
+import com.parg3v.shoppingapp.ui.theme.CustomPurple
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +51,7 @@ fun BottomNavigationBar(
                 },
                 colors = androidx.compose.material3.NavigationBarItemDefaults
                     .colors(
-                        selectedIconColor = ButtonSelected,
+                        selectedIconColor = CustomPurple,
                         indicatorColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
                             LocalAbsoluteTonalElevation.current
                         )

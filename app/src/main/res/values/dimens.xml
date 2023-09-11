@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_small">15dp</dimen>
+    <dimen name="card_width">170dp</dimen>
+    <dimen name="card_height">250dp</dimen>
+    <dimen name="card_border_size">2dp</dimen>
+</resources>
