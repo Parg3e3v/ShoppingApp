@@ -1,4 +1,4 @@
-package com.parg3v.shoppingapp.Home
+package com.parg3v.shoppingapp.view.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,8 +18,6 @@ import com.parg3v.shoppingapp.ui.theme.ShoppingAppTheme
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
-
-//    val itemsList by viewModel.state.collectAsState(initial = false)
 
     val itemsList = listOf(
         Product(

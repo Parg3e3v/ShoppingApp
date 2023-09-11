@@ -1,4 +1,4 @@
-package com.parg3v.shoppingapp.Home
+package com.parg3v.shoppingapp.view.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.parg3v.shoppingapp.screen
+package com.parg3v.shoppingapp.view.cart
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
