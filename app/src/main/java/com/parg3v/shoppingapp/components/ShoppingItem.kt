@@ -74,15 +74,17 @@ fun ShoppingItem(
                 error = placeholder,
                 placeholder = placeholder,
                 contentDescription = item.title,
-                contentScale = ContentScale.FillHeight,
+                contentScale = ContentScale.Fit,
                 alignment = Alignment.Center,
                 modifier = Modifier
                     .clip(RoundedCornerShape(5.dp))
                     .fillMaxWidth()
-                    .fillMaxHeight(0.6F)
+                    .fillMaxHeight(0.5F)
             )
 
-            Text(text = item.title)
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.card_space_between)))
+
+            Text(text = item.title, maxLines = 2)
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -130,10 +132,6 @@ fun CardPreview() {
             Rating(4.5F, 500)
         ),
         Modifier,
-        onButtonClick = {
-            // TODO
-        }
-    ) {
-        // TODO
-    }
+        onButtonClick = {}
+    ) {}
 }

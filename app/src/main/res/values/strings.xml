@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ShoppingApp</string>
     <string name="add_to_cart">Add to cart</string>
+    <string name="error_text">Something went wrong. Check your internet connection</string>
 </resources>

@@ -11,3 +11,5 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val CustomPurple = Color(0xFF402A92)
+val ShimmingBackground = Color(0xFFCACACA)
+val ShimmingForeground = Color(0xFF8F8F8F)
