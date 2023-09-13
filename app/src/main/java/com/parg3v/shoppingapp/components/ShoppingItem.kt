@@ -3,7 +3,6 @@ package com.parg3v.shoppingapp.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -78,11 +77,12 @@ fun ShoppingItem(
                 alignment = Alignment.Center,
                 modifier = Modifier
                     .clip(RoundedCornerShape(5.dp))
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.8F)
                     .fillMaxHeight(0.5F)
+                    .align(Alignment.CenterHorizontally)
             )
 
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.card_space_between)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.card_space_image_title)))
 
             Text(text = item.title, maxLines = 2)
 
@@ -93,16 +93,11 @@ fun ShoppingItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "${item.price}$",
-                        textAlign = TextAlign.Center
-                    )
-                }
+                Text(
+                    text = "${item.price}$",
+                    textAlign = TextAlign.Center
+                )
                 FloatingActionButton(
-
                     onClick = onButtonClick,
                     containerColor = CustomPurple
                 ) {

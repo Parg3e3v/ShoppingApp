@@ -8,16 +8,16 @@ import kotlinx.coroutines.flow.flow
 import java.io.IOException
 import javax.inject.Inject
 
-class GetAllProductsUseCase @Inject constructor(
+class GetProductsByCategoryUseCase @Inject constructor(
     private val productsRepository: ProductsRepository
 ) {
-    operator fun invoke(): Flow<ResultOf<List<Product>>> = flow{
+    operator fun invoke(category: String): Flow<ResultOf<List<Product>>> = flow{
         try {
             emit(ResultOf.Loading())
-            val products = productsRepository.getAllProducts()
+            val products = productsRepository.getProductsByCategory(category)
             emit(ResultOf.Success(products))
         }catch (e: IOException){
-            emit(ResultOf.Failure( "Something went wrong. Check your internet connection"))
+            emit(ResultOf.Failure( "Couldn't get products by category"))
         }
     }
 }

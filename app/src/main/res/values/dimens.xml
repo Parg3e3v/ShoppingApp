@@ -2,7 +2,10 @@
 <resources>
     <dimen name="padding_small">15dp</dimen>
     <dimen name="card_width">170dp</dimen>
-    <dimen name="card_height">250dp</dimen>
+    <dimen name="card_height">270dp</dimen>
     <dimen name="card_border_size">2dp</dimen>
     <dimen name="card_space_between">15dp</dimen>
+    <dimen name="card_space_image_title">10dp</dimen>
+    <dimen name="card_padding">5dp</dimen>
+    <dimen name="products_list_vertical_space">16dp</dimen>
 </resources>

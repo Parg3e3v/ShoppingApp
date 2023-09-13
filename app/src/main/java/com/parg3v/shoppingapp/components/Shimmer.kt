@@ -48,7 +48,7 @@ import com.parg3v.shoppingapp.ui.theme.ShimmingBackground
 import com.parg3v.shoppingapp.ui.theme.ShimmingForeground
 
 @Composable
-fun ShimmerItem(
+fun Shimmer(
     isLoading: Boolean,
     contentAfterLoading: @Composable () -> Unit,
     loadingComposable: @Composable () -> Unit
@@ -91,8 +91,13 @@ fun Modifier.shimmerEffect(): Modifier = composed {
 
 
 @Composable
-fun RowPlaceHolder(item: @Composable (item: Any) -> Unit, itemsCount: Int = 10) {
+fun RowPlaceHolder(
+    modifier: Modifier = Modifier,
+    item: @Composable (item: Any) -> Unit,
+    itemsCount: Int = 10
+) {
     LazyRow(
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(
             dimensionResource(id = R.dimen.card_space_between)
         )
@@ -172,8 +177,5 @@ fun ShoppingItemPlaceholder() {
 @Preview
 @Composable
 fun Preview() {
-    ShimmerItem(
-        isLoading = true,
-        contentAfterLoading = {},
-        loadingComposable = { ShoppingItemPlaceholder() })
+    RowPlaceHolder(item = { ShoppingItemPlaceholder() })
 }

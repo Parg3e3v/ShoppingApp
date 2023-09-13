@@ -12,4 +12,12 @@ class ProductsRepositoryImpl @Inject constructor(
     override suspend fun getAllProducts(): List<Product> {
         return api.getAllProducts().map { it.toProduct() }
     }
+
+    override suspend fun getProductsByCategory(category: String): List<Product> {
+        return api.getProductsByCategory(category).map { it.toProduct() }
+    }
+
+    override suspend fun getAllCategories(): List<String> {
+        return api.getAllCategories()
+    }
 }
