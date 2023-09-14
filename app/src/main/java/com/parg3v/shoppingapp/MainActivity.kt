@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController: NavHostController = rememberNavController()
             CustomScaffold(navController = navController) {
-                Navigation(navController)
+                Navigation(navController, it)
             }
         }
     }

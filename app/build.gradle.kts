@@ -87,4 +87,7 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
+
+    // Dots
+    implementation(libs.dotsindicator)
 }

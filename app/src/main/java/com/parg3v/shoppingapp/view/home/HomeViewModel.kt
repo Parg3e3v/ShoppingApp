@@ -29,10 +29,6 @@ class HomeViewModel @Inject constructor(
         getProducts()
     }
 
-    fun getByCategory(value: String){
-        getProductsByCategory(value)
-    }
-
     private fun getProducts() {
         getAllProductsUseCase().onEach { result ->
             when (result) {
@@ -52,7 +48,7 @@ class HomeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun getProductsByCategory(category: String) {
+    fun fetchProductsByCategory(category: String) {
         getProductsByCategoryUseCase(category).onEach { result ->
             when (result) {
                 is ResultOf.Success<*> -> {
