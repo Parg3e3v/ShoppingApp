@@ -46,18 +46,23 @@ fun AutoSlidingCarousel(
     }
 
     Box(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.carousel_horizontal_padding),
+                vertical = dimensionResource(id = R.dimen.carousel_vertical_padding)
+            )
     ) {
         HorizontalPager(pageCount = itemsCount, state = pagerState) { page ->
             itemContent(page)
         }
 
         DotsIndicator(
-
             dotCount = itemsCount,
             type = ShiftIndicatorType(
                 dotsGraphic = DotGraphic(
-                    color = CustomPurple
+                    color = CustomPurple,
+                    size = dimensionResource(id = R.dimen.carousel_indicator_size)
                 )
             ),
             pagerState = pagerState,
@@ -65,5 +70,6 @@ fun AutoSlidingCarousel(
                 .align(Alignment.BottomCenter)
                 .padding(dimensionResource(id = R.dimen.carousel_dots_padding_bottom))
         )
+
     }
 }

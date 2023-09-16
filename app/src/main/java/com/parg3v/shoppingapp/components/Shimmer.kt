@@ -64,13 +64,13 @@ fun Modifier.shimmerEffect(): Modifier = composed {
     var size by remember {
         mutableStateOf(IntSize.Zero)
     }
-    val transition = rememberInfiniteTransition(label = "Loading")
+    val transition = rememberInfiniteTransition(label = stringResource(id = R.string.text_loading))
     val startOffsetX by transition.animateFloat(
         initialValue = -2 * size.width.toFloat(),
         targetValue = 2 * size.width.toFloat(),
         animationSpec = infiniteRepeatable(
             animation = tween(1000)
-        ), label = "Loading"
+        ), label = stringResource(id = R.string.text_loading)
     )
 
     background(
@@ -94,7 +94,7 @@ fun Modifier.shimmerEffect(): Modifier = composed {
 fun RowPlaceHolder(
     modifier: Modifier = Modifier,
     item: @Composable (item: Any) -> Unit,
-    itemsCount: Int = 10
+    itemsCount: Int = integerResource(id = R.integer.card_big_list_range)
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -102,7 +102,7 @@ fun RowPlaceHolder(
             dimensionResource(id = R.dimen.card_space_between)
         )
     ) {
-        items(itemsCount){item ->
+        items(itemsCount) { item ->
             item(item)
         }
     }
@@ -128,7 +128,7 @@ fun ShoppingItemPlaceholder() {
         ) {
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.card_image_border_radius)))
                     .fillMaxWidth(0.8F)
                     .fillMaxHeight(0.5F)
                     .align(Alignment.CenterHorizontally)

@@ -32,7 +32,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.parg3v.domain.model.Product
@@ -76,7 +75,7 @@ fun ShoppingItem(
                 contentScale = ContentScale.Fit,
                 alignment = Alignment.Center,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.card_image_border_radius)))
                     .fillMaxWidth(0.8F)
                     .fillMaxHeight(0.5F)
                     .align(Alignment.CenterHorizontally)
@@ -84,7 +83,7 @@ fun ShoppingItem(
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.card_space_image_title)))
 
-            Text(text = item.title, maxLines = 2)
+            Text(text = item.title, maxLines = integerResource(id = R.integer.card_title_max_line))
 
             Spacer(modifier = Modifier.weight(1f))
 

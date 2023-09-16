@@ -25,7 +25,10 @@ import com.parg3v.shoppingapp.ui.theme.CustomPurple
 
 @Composable
 fun ProductsSection(itemList: ProductListState, title: String, modifier: Modifier = Modifier) {
-    val bigListSize = itemList.products.size > integerResource(id = R.integer.card_big_list_range)
+
+    val listRange = integerResource(id = R.integer.card_big_list_range)
+    val bigListSize = itemList.products.size > listRange
+
     Box(modifier = modifier.height(dimensionResource(id = R.dimen.card_height) + 50.dp)) {
         Row(
             modifier = Modifier
@@ -68,7 +71,7 @@ fun ProductsSection(itemList: ProductListState, title: String, modifier: Modifie
                         .align(Alignment.BottomStart)
                 ) {
                     items(
-                        if (bigListSize) itemList.products.subList(0, 5)
+                        if (bigListSize) itemList.products.subList(0, listRange)
                         else itemList.products
                     ) { item ->
                         ShoppingItem(item = item, onButtonClick = { /*TODO*/ }) {

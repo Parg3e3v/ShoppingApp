@@ -3,6 +3,7 @@ package com.parg3v.shoppingapp.view.home
 import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -14,8 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -32,34 +35,49 @@ import com.parg3v.shoppingapp.components.AutoSlidingCarousel
 import com.parg3v.shoppingapp.components.ProductsSection
 import com.parg3v.shoppingapp.model.ProductListState
 import com.parg3v.shoppingapp.ui.theme.ShoppingAppTheme
+import com.parg3v.shoppingapp.utils.Constants
 
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
     LaunchedEffect(Unit) {
-        viewModel.fetchProductsByCategory("electronics")
+        viewModel.fetchProductsByCategory("jewelery")
     }
     val itemsList by viewModel.productsState.collectAsState()
     val itemsListByCategory by viewModel.productsByCategoryState.collectAsState()
-    HomeScreenUI(itemsList = itemsList, itemsListByCategory = itemsListByCategory, listOf(
-        "https://png.pngtree.com/png-clipart/20220419/original/pngtree-red-festive-jewelry-poster-png-image_7538385.png",
-        "https://marketplace.canva.com/EAFYElY5EE4/1/0/1600w/canva-brown-and-white-modern-fashion-banner-landscape-Ap8IU9nEbh8.jpg",
-        "https://i.pinimg.com/564x/f0/f9/e4/f0f9e45724771f16745ad3f6f640d3ce.jpg"
-    ))
+    HomeScreenUI(
+        itemsList = itemsList, itemsListByCategory = itemsListByCategory, listOf(
+            Constants.BANNER_VALUES_1, Constants.BANNER_VALUES_2, Constants.BANNER_VALUES_3
+        )
+    )
 
 }
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreenUI(itemsList: ProductListState, itemsListByCategory: ProductListState, images:List<String>) {
+fun HomeScreenUI(
+    itemsList: ProductListState,
+    itemsListByCategory: ProductListState,
+    images: List<String>
+) {
     ShoppingAppTheme {
+        if (itemsList.error.isNotBlank() || itemsListByCategory.error.isNotBlank()) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                Text(
+                    text = stringResource(id = R.string.error_text),
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+            }
+            return@ShoppingAppTheme
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(),
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.products_list_vertical_space))
         ) {
             AutoSlidingCarousel(
@@ -71,7 +89,9 @@ fun HomeScreenUI(itemsList: ProductListState, itemsListByCategory: ProductListSt
                             .build(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.height(dimensionResource(id = R.dimen.card_height))
+                        modifier = Modifier
+                            .height(dimensionResource(id = R.dimen.card_height)),
+                        placeholder = ColorPainter(Color.Gray)
                     )
                 }
             )
@@ -84,17 +104,9 @@ fun HomeScreenUI(itemsList: ProductListState, itemsListByCategory: ProductListSt
 
             ProductsSection(
                 itemList = itemsListByCategory,
-                title = "Electronics",
+                title = "Jewelery",
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding))
             )
-
-            if (itemsList.error.isNotBlank() || itemsListByCategory.error.isNotBlank()) {
-                Text(
-                    text = stringResource(id = R.string.error_text),
-                    color = Color.Black,
-                    textAlign = TextAlign.Center
-                )
-            }
         }
     }
 }
@@ -132,4 +144,3 @@ fun Preview() {
         )
     )
 }
-
