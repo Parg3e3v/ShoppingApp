@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,23 +32,23 @@ import com.parg3v.domain.model.Rating
 import com.parg3v.shoppingapp.R
 import com.parg3v.shoppingapp.components.AutoSlidingCarousel
 import com.parg3v.shoppingapp.components.ProductsSection
+import com.parg3v.shoppingapp.model.CategoriesListState
 import com.parg3v.shoppingapp.model.ProductListState
 import com.parg3v.shoppingapp.ui.theme.ShoppingAppTheme
-import com.parg3v.shoppingapp.utils.Constants
 
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
-
-    LaunchedEffect(Unit) {
-        viewModel.fetchProductsByCategory("jewelery")
-    }
-    val itemsList by viewModel.productsState.collectAsState()
+    val itemsList by viewModel.highlyRatedProductsState.collectAsState()
     val itemsListByCategory by viewModel.productsByCategoryState.collectAsState()
+    val categories by viewModel.categoriesState.collectAsState()
+    val bannersList by viewModel.bannersState.collectAsState()
+
     HomeScreenUI(
-        itemsList = itemsList, itemsListByCategory = itemsListByCategory, listOf(
-            Constants.BANNER_VALUES_1, Constants.BANNER_VALUES_2, Constants.BANNER_VALUES_3
-        )
+        itemsList = itemsList,
+        itemsListByCategory = itemsListByCategory,
+        categories = categories,
+        images = bannersList.banners
     )
 
 }
@@ -60,7 +59,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 fun HomeScreenUI(
     itemsList: ProductListState,
     itemsListByCategory: ProductListState,
-    images: List<String>
+    categories: CategoriesListState,
+    images: List<String>?
 ) {
     ShoppingAppTheme {
         if (itemsList.error.isNotBlank() || itemsListByCategory.error.isNotBlank()) {
@@ -81,11 +81,11 @@ fun HomeScreenUI(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.products_list_vertical_space))
         ) {
             AutoSlidingCarousel(
-                itemsCount = images.size,
+                itemsCount = images?.size ?: 3,
                 itemContent = { index ->
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(images[index])
+                            .data(images?.get(index))
                             .build(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
@@ -97,16 +97,17 @@ fun HomeScreenUI(
             )
 
             ProductsSection(
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding)),
                 itemList = itemsList,
-                title = "Best Celling",
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding))
+                title = "Best Celling"
             )
 
             ProductsSection(
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding)),
                 itemList = itemsListByCategory,
-                title = "Jewelery",
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding))
+                categoriesListState = categories
             )
+
         }
     }
 }
@@ -136,6 +137,7 @@ fun Preview() {
                 sampleProduct, sampleProduct, sampleProduct, sampleProduct
             )
         ),
+        categories = CategoriesListState(categories = listOf("Jewelery")),
         images = listOf(
             "https://png.pngtree.com/png-clipart/20220419/original/pngtree-red-festive-jewelry-poster-png-image_7538385.png",
             "https://png.pngtree.com/png-clipart/20220419/original/pngtree-red-festive-jewelry-poster-png-image_7538385.png",

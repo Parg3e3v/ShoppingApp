@@ -10,12 +10,12 @@ import javax.inject.Inject
 class GetAllCategoriesUseCase @Inject constructor(
     private val productsRepository: ProductsRepository
 ) {
-    operator fun invoke(): Flow<ResultOf<List<String>>> = flow{
+    operator fun invoke(): Flow<ResultOf<List<String>>> = flow {
         try {
             emit(ResultOf.Loading())
             val categories = productsRepository.getAllCategories()
             emit(ResultOf.Success(categories))
-        }catch (e: IOException){
+        } catch (e: IOException) {
             emit(ResultOf.Failure("Couldn't get categories list"))
         }
     }

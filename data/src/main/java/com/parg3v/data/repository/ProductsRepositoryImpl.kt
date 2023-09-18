@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class ProductsRepositoryImpl @Inject constructor(
     private val api: MyApi
-): ProductsRepository {
+) : ProductsRepository {
     override suspend fun getAllProducts(): List<Product> {
         return api.getAllProducts().map { it.toProduct() }
     }

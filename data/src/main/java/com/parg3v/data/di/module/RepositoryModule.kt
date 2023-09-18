@@ -1,6 +1,8 @@
 package com.parg3v.data.di.module
 
+import com.parg3v.data.repository.BannersRepositoryImpl
 import com.parg3v.data.repository.ProductsRepositoryImpl
+import com.parg3v.domain.repository.BannersRepository
 import com.parg3v.domain.repository.ProductsRepository
 import dagger.Binds
 import dagger.Module
@@ -13,7 +15,13 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
     @Binds
     @Singleton
-    abstract fun bindMyRepository(
-        myRepository: ProductsRepositoryImpl
+    abstract fun bindProductsRepository(
+        repository: ProductsRepositoryImpl
     ): ProductsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBannersRepository(
+        repository: BannersRepositoryImpl
+    ): BannersRepository
 }

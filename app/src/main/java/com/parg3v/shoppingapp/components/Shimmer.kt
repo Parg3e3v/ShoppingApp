@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -92,12 +93,37 @@ fun Modifier.shimmerEffect(): Modifier = composed {
 
 @Composable
 fun RowPlaceHolder(
-    modifier: Modifier = Modifier,
+    labelsRowModifier: Modifier = Modifier,
+    productsRowModifier: Modifier = Modifier,
     item: @Composable (item: Any) -> Unit,
     itemsCount: Int = integerResource(id = R.integer.card_big_list_range)
 ) {
+    Row(
+        modifier = labelsRowModifier
+            .height(50.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .wrapContentWidth(Alignment.Start)
+                .weight(1F)
+                .height(30.dp)
+                .width(150.dp)
+                .padding(start = 10.dp)
+                .shimmerEffect()
+        )
+        Box(
+            modifier = Modifier
+                .wrapContentWidth(Alignment.End)
+                .weight(1F)
+                .height(30.dp)
+                .width(100.dp)
+                .shimmerEffect()
+        )
+    }
+
     LazyRow(
-        modifier = modifier.fillMaxWidth(),
+        modifier = productsRowModifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(
             dimensionResource(id = R.dimen.card_space_between)
         )
