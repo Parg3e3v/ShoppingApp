@@ -10,14 +10,14 @@ sealed class BottomNavItem(
     val hasNews: Boolean
 ) {
     object Home :
-        BottomNavItem("Shop", Screen.HomeScreen.route, R.drawable.shop_icon, false)
+        BottomNavItem("Shop", Screen.HomeScreen.route, R.drawable.icon_shop, false)
 
     object Explore :
-        BottomNavItem("Explore", Screen.ExploreScreen.route, R.drawable.explore_button, false)
+        BottomNavItem("Explore", Screen.ExploreScreen.route, R.drawable.icon_explore, false)
 
     object Cart :
-        BottomNavItem("Cart", Screen.CartScreen.route, R.drawable.cart_icon, true)
+        BottomNavItem("Cart", Screen.CartScreen.route, R.drawable.icon_cart, true)
 
     object Favourite :
-        BottomNavItem("Favourite", Screen.FavouriteScreen.route, R.drawable.favourite_icon, false)
+        BottomNavItem("Favourite", Screen.FavouriteScreen.route, R.drawable.icon_favourite, false)
 }

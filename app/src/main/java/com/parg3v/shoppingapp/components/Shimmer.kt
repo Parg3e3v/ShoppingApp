@@ -93,13 +93,12 @@ fun Modifier.shimmerEffect(): Modifier = composed {
 
 @Composable
 fun RowPlaceHolder(
-    labelsRowModifier: Modifier = Modifier,
-    productsRowModifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
     item: @Composable (item: Any) -> Unit,
     itemsCount: Int = integerResource(id = R.integer.card_big_list_range)
 ) {
     Row(
-        modifier = labelsRowModifier
+        modifier = Modifier
             .height(50.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -123,7 +122,7 @@ fun RowPlaceHolder(
     }
 
     LazyRow(
-        modifier = productsRowModifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(
             dimensionResource(id = R.dimen.card_space_between)
         )

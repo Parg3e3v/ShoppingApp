@@ -31,11 +31,12 @@ import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.parg3v.domain.model.DummyProduct
 import com.parg3v.domain.model.Product
-import com.parg3v.domain.model.Rating
 import com.parg3v.shoppingapp.R
 import com.parg3v.shoppingapp.ui.theme.CustomPurple
 
@@ -83,7 +84,11 @@ fun ShoppingItem(
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.card_space_image_title)))
 
-            Text(text = item.title, maxLines = integerResource(id = R.integer.card_title_max_line))
+            Text(
+                text = item.title,
+                maxLines = integerResource(id = R.integer.card_title_max_line),
+                overflow = TextOverflow.Ellipsis
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -116,15 +121,7 @@ fun ShoppingItem(
 @Composable
 fun CardPreview() {
     ShoppingItem(
-        Product(
-            0,
-            "Title",
-            50F,
-            "50$",
-            "50$",
-            "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-            Rating(4.5F, 500)
-        ),
+        DummyProduct,
         Modifier,
         onButtonClick = {}
     ) {}

@@ -2,9 +2,8 @@ package com.parg3v.domain.module
 
 import com.parg3v.domain.repository.ProductsRepository
 import com.parg3v.domain.use_cases.GetAllCategoriesUseCase
-import com.parg3v.domain.use_cases.GetAllProductsUseCase
 import com.parg3v.domain.use_cases.GetHighlyRatedProductsUseCase
-import com.parg3v.domain.use_cases.GetProductsByCategoryUseCase
+import com.parg3v.domain.use_cases.GetProductsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,19 +22,13 @@ object ProductsModule {
 
     @Provides
     @Singleton
-    fun provideGetAllProductsUseCase(productsRepository: ProductsRepository): GetAllProductsUseCase {
-        return GetAllProductsUseCase(productsRepository)
-    }
-
-    @Provides
-    @Singleton
     fun provideGetHighlyRatedProductsUseCase(productsRepository: ProductsRepository): GetHighlyRatedProductsUseCase {
         return GetHighlyRatedProductsUseCase(productsRepository)
     }
 
     @Provides
     @Singleton
-    fun provideGetProductsByCategoryUseCase(productsRepository: ProductsRepository): GetProductsByCategoryUseCase {
-        return GetProductsByCategoryUseCase(productsRepository)
+    fun provideGetProductsByCategoryUseCase(productsRepository: ProductsRepository): GetProductsUseCase {
+        return GetProductsUseCase(productsRepository)
     }
 }

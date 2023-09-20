@@ -14,7 +14,7 @@ class GetHighlyRatedProductsUseCase @Inject constructor(
     operator fun invoke(): Flow<ResultOf<List<Product>>> = flow{
         try {
             emit(ResultOf.Loading())
-            val products = productsRepository.getAllProducts()
+            val products = productsRepository.getProducts("all")
                 .filter { it.rating.rate >= 4F }
                 .sortedByDescending { it.rating.rate }
             emit(ResultOf.Success(products))
