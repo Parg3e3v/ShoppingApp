@@ -13,12 +13,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.parg3v.domain.model.Product
+import com.parg3v.domain.model.Rating
 import com.parg3v.shoppingapp.R
 import com.parg3v.shoppingapp.model.CategoriesListState
 import com.parg3v.shoppingapp.model.ProductListState
@@ -47,8 +51,7 @@ fun ProductsSection(
                 )
             },
             loadingComposable = {
-                RowPlaceHolder(
-                    labelsRowModifier = Modifier.align(Alignment.TopStart),
+                RowPlaceHolder(labelsRowModifier = Modifier.align(Alignment.TopStart),
                     productsRowModifier = Modifier.align(Alignment.BottomStart),
                     item = { ShoppingItemPlaceholder() })
             })
@@ -63,15 +66,25 @@ fun ProductsSectionUI(
     title: String,
     categoriesListState: CategoriesListState
 ) {
+    val showDialog = remember { mutableStateOf(false) }
+    val currentItem = remember {
+        mutableStateOf(
+            Product(-1, "", -1F, "", "", "", Rating(-1F, -1))
+        )
+    }
+
+    if (showDialog.value) {
+        MinimalDialog(currentItem.value) {
+            showDialog.value = false
+        }
+    }
     val listRange = integerResource(id = R.integer.card_big_list_range)
     val bigListSize = itemList.products.size > listRange
     val labelText =
         if (categoriesListState.categories.isEmpty()) title else categoriesListState.categories[0].replaceFirstChar { it.uppercase() }
 
     Row(
-        modifier = labelsRowModifier
-            .height(50.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier = labelsRowModifier.height(50.dp), verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = labelText,
@@ -100,16 +113,16 @@ fun ProductsSectionUI(
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(
             dimensionResource(id = R.dimen.card_space_between)
-        ), modifier = productsRowModifier
-            .fillMaxWidth()
+        ), modifier = productsRowModifier.fillMaxWidth()
     ) {
         items(
             if (bigListSize) itemList.products.subList(0, listRange)
             else itemList.products
         ) { item ->
-            ShoppingItem(item = item, onButtonClick = { /*TODO*/ }) {
-                /*TODO*/
-            }
+            ShoppingItem(item = item, onButtonClick = {
+                currentItem.value = item
+                showDialog.value = true
+            }) {}
         }
     }
 }
