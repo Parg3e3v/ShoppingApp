@@ -119,10 +119,10 @@ fun ProductsSectionUI(
             if (bigListSize) itemList.products.subList(0, listRange)
             else itemList.products
         ) { item ->
-            ShoppingItem(item = item, onButtonClick = {
+            ShoppingItem(item = item, onButtonClick = {}) {
                 currentItem.value = item
                 showDialog.value = true
-            }) {}
+            }
         }
     }
 }

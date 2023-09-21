@@ -1,9 +1,15 @@
 package com.parg3v.shoppingapp.components
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,16 +17,22 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -35,31 +47,48 @@ import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.parg3v.domain.model.Product
+import com.parg3v.domain.model.Rating
 import com.parg3v.shoppingapp.R
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MinimalDialog(item: Product, onDismissRequest: () -> Unit) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
-        PreviewCard()
+        InfoCard(item)
     }
 }
 
-@Preview
+@ExperimentalAnimationApi
 @Composable
-fun PreviewCard() {
+fun InfoCard(item: Product) {
     val placeholder = painterResource(id = R.drawable.placeholder)
-    Card {
+    var expendState by remember { mutableStateOf(false) }
+    val rotationState by animateFloatAsState(
+        targetValue = if (expendState) 180F else 0F, label = ""
+    )
+
+    Card(
+        modifier = Modifier.animateContentSize(
+            animationSpec = tween(
+                durationMillis = 500,
+                easing = LinearOutSlowInEasing
+            )
+        )
+    ) {
         Column(
             modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current).data("").crossfade(true).build(),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(item.image)
+                    .crossfade(true)
+                    .build(),
                 error = placeholder,
                 placeholder = placeholder,
-                contentDescription = "Title",
+                contentDescription = item.title,
                 contentScale = ContentScale.Fit,
                 alignment = Alignment.Center,
                 modifier = Modifier
@@ -70,15 +99,15 @@ fun PreviewCard() {
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Title",
+                    text = item.title,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp
+                    fontSize = 24.sp,
+                    modifier = Modifier.weight(6F)
                 )
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { /*TODO*/ }, modifier = Modifier.weight(1F)) {
                     Icon(
                         painter = painterResource(id = R.drawable.favourite_icon),
                         contentDescription = "Add to favourites"
@@ -88,33 +117,20 @@ fun PreviewCard() {
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_subtract),
-                    contentDescription = "subtract"
+                Text(
+                    modifier = Modifier.weight(2F),
+                    text = "${item.rating.rate}",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp
                 )
 
                 Text(
-                    modifier = Modifier
-                        .border(BorderStroke(1.dp, Color.Gray), RoundedCornerShape(17.dp))
-                        .padding(vertical = 13.dp, horizontal = 20.dp)
-                        .wrapContentHeight(),
-                    fontSize = 18.sp,
-                    text = "1",
-                    textAlign = TextAlign.Center
-                )
-
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_add),
-                    contentDescription = "add"
-                )
-
-                Spacer(modifier = Modifier.weight(1F))
-
-                Text(
-                    text = "$50.99",
+                    modifier = Modifier.weight(1F),
+                    text = "$${item.price}",
+                    textAlign = TextAlign.End,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
                 )
@@ -127,8 +143,55 @@ fun PreviewCard() {
                     .background(Color.Gray)
             )
 
-
-
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "Product Details")
+                IconButton(
+                    onClick = { expendState = !expendState },
+                    modifier = Modifier.rotate(rotationState)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_show_more),
+                        contentDescription = "Show more"
+                    )
+                }
+            }
+            if (expendState) {
+                Box(
+                    modifier = Modifier
+                        .border(BorderStroke(1.dp, Color.Gray), RoundedCornerShape(5.dp))
+                        .padding(5.dp)
+                ) {
+                    Text(
+                        text = item.description,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .verticalScroll(rememberScrollState())
+                    )
+                }
+            }
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDialog() {
+    MinimalDialog(
+        item = Product(
+            1,
+            "Title",
+            50.99F,
+            "Easy upgrade for faster boot up, shutdown, application load and response (As compared to 5400 RPM SATA 2.5” hard drive; Based on published specifications and internal benchmarking tests using PCMark vantage scores) Boosts burst write performance, making it ideal for typical PC workloads The perfect balance of performance and reliability Read/write speeds of up to 535MB/s/450MB/s (Based on internal testing; Performance may vary depending upon drive capacity, host device, OS and application.)",
+            "",
+            "",
+            Rating(4.5F, 519)
+        )
+    ) {
+
     }
 }

@@ -31,6 +31,7 @@ import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -83,7 +84,11 @@ fun ShoppingItem(
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.card_space_image_title)))
 
-            Text(text = item.title, maxLines = integerResource(id = R.integer.card_title_max_line))
+            Text(
+                text = item.title,
+                maxLines = integerResource(id = R.integer.card_title_max_line),
+                overflow = TextOverflow.Ellipsis
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
