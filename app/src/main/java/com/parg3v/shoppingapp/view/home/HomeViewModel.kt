@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.parg3v.domain.common.ResultOf
 import com.parg3v.domain.use_cases.GetAllCategoriesUseCase
-import com.parg3v.domain.use_cases.GetAllProductsUseCase
 import com.parg3v.domain.use_cases.GetBannersUseCase
 import com.parg3v.domain.use_cases.GetHighlyRatedProductsUseCase
 import com.parg3v.domain.use_cases.GetProductsByCategoryUseCase
@@ -20,15 +19,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getAllProductsUseCase: GetAllProductsUseCase,
     private val getProductsByCategoryUseCase: GetProductsByCategoryUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
     private val getHighlyRatedProductsUseCase: GetHighlyRatedProductsUseCase,
     private val getBannersUseCase: GetBannersUseCase
 ) : ViewModel() {
 
-    private val _productsState = MutableStateFlow(ProductListState())
-    val productsState: StateFlow<ProductListState> = _productsState
+    private val _allProductsState = MutableStateFlow(ProductListState())
+    val allProductsState: StateFlow<ProductListState> = _allProductsState
 
     private val _productsByCategoryState = MutableStateFlow(ProductListState())
     val productsByCategoryState: StateFlow<ProductListState> = _productsByCategoryState
@@ -50,19 +48,19 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getProducts() {
-        getAllProductsUseCase().onEach { result ->
+        getProductsByCategoryUseCase("all").onEach { result ->
             when (result) {
                 is ResultOf.Success<*> -> {
-                    _productsState.value = ProductListState(products = result.data ?: emptyList())
+                    _allProductsState.value = ProductListState(products = result.data ?: emptyList())
                 }
 
                 is ResultOf.Failure -> {
-                    _productsState.value =
+                    _allProductsState.value =
                         ProductListState(error = result.message ?: "An unexpected error occurred")
                 }
 
                 is ResultOf.Loading -> {
-                    _productsState.value = ProductListState(isLoading = true)
+                    _allProductsState.value = ProductListState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)

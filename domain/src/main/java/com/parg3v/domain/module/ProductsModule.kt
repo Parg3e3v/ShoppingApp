@@ -2,7 +2,6 @@ package com.parg3v.domain.module
 
 import com.parg3v.domain.repository.ProductsRepository
 import com.parg3v.domain.use_cases.GetAllCategoriesUseCase
-import com.parg3v.domain.use_cases.GetAllProductsUseCase
 import com.parg3v.domain.use_cases.GetHighlyRatedProductsUseCase
 import com.parg3v.domain.use_cases.GetProductsByCategoryUseCase
 import dagger.Module
@@ -19,12 +18,6 @@ object ProductsModule {
     @Singleton
     fun provideGetAllCategoriesUseCase(productsRepository: ProductsRepository): GetAllCategoriesUseCase {
         return GetAllCategoriesUseCase(productsRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideGetAllProductsUseCase(productsRepository: ProductsRepository): GetAllProductsUseCase {
-        return GetAllProductsUseCase(productsRepository)
     }
 
     @Provides

@@ -6,8 +6,6 @@ internal object NetworkConfig {
     const val PATH_PRODUCTS = "/products"
     const val PATH_PRODUCT_CATEGORY = "/category"
     const val PATH_ALL_CATEGORIES = "/categories"
-    const val PATH_USERS = "/users"
-    const val PATH_CARTS = "/carts"
 
     const val BANNER_VALUES_1 =
         "https://png.pngtree.com/png-clipart/20220419/original/pngtree-red-festive-jewelry-poster-png-image_7538385.png"

@@ -25,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.parg3v.domain.model.Product
@@ -38,13 +40,14 @@ import com.parg3v.shoppingapp.ui.theme.ShoppingAppTheme
 
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
     val itemsList by viewModel.highlyRatedProductsState.collectAsState()
     val itemsListByCategory by viewModel.productsByCategoryState.collectAsState()
     val categories by viewModel.categoriesState.collectAsState()
     val bannersList by viewModel.bannersState.collectAsState()
 
     HomeScreenUI(
+        navController = navController,
         itemsList = itemsList,
         itemsListByCategory = itemsListByCategory,
         categories = categories,
@@ -57,6 +60,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreenUI(
+    navController: NavController,
     itemsList: ProductListState,
     itemsListByCategory: ProductListState,
     categories: CategoriesListState,
@@ -97,12 +101,14 @@ fun HomeScreenUI(
             )
 
             ProductsSection(
+                navController = navController,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding)),
                 itemList = itemsList,
                 title = "Best Celling"
             )
 
             ProductsSection(
+                navController = navController,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding)),
                 itemList = itemsListByCategory,
                 categoriesListState = categories
@@ -127,6 +133,7 @@ fun Preview() {
         Rating(4.5F, 57)
     )
     HomeScreenUI(
+        navController = rememberNavController(),
         itemsList = ProductListState(
             products = listOf(
                 sampleProduct, sampleProduct, sampleProduct, sampleProduct

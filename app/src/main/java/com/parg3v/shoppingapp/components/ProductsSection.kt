@@ -13,24 +13,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.parg3v.domain.model.Product
-import com.parg3v.domain.model.Rating
+import androidx.navigation.NavController
 import com.parg3v.shoppingapp.R
 import com.parg3v.shoppingapp.model.CategoriesListState
 import com.parg3v.shoppingapp.model.ProductListState
+import com.parg3v.shoppingapp.navigation.Screen
 import com.parg3v.shoppingapp.ui.theme.CustomPurple
 
 
 @Composable
 fun ProductsSection(
+    navController: NavController,
     modifier: Modifier = Modifier,
     itemList: ProductListState,
     title: String = "",
@@ -43,6 +42,7 @@ fun ProductsSection(
         Shimmer(isLoading = itemList.isLoading || categoriesListState.isLoading,
             contentAfterLoading = {
                 ProductsSectionUI(
+                    navController = navController,
                     labelsRowModifier = Modifier.align(Alignment.TopStart),
                     productsRowModifier = Modifier.align(Alignment.BottomStart),
                     itemList = itemList,
@@ -60,24 +60,13 @@ fun ProductsSection(
 
 @Composable
 fun ProductsSectionUI(
+    navController: NavController,
     labelsRowModifier: Modifier = Modifier,
     productsRowModifier: Modifier = Modifier,
     itemList: ProductListState,
     title: String,
     categoriesListState: CategoriesListState
 ) {
-    val showDialog = remember { mutableStateOf(false) }
-    val currentItem = remember {
-        mutableStateOf(
-            Product(-1, "", -1F, "", "", "", Rating(-1F, -1))
-        )
-    }
-
-    if (showDialog.value) {
-        MinimalDialog(currentItem.value) {
-            showDialog.value = false
-        }
-    }
     val listRange = integerResource(id = R.integer.card_big_list_range)
     val bigListSize = itemList.products.size > listRange
     val labelText =
@@ -120,8 +109,7 @@ fun ProductsSectionUI(
             else itemList.products
         ) { item ->
             ShoppingItem(item = item, onButtonClick = {}) {
-                currentItem.value = item
-                showDialog.value = true
+                navController.navigate(Screen.InfoScreen.withArgsFromProduct(item))
             }
         }
     }

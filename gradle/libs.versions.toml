@@ -1,4 +1,5 @@
 [versions]
+accompanist-navigation-animation = "0.25.0"
 activity-compose = "1.7.2"
 appcompat = "1.6.1"
 coil-compose = "2.4.0"
@@ -20,6 +21,7 @@ okhttp = "5.0.0-alpha.3"
 retrofit = "2.9.0"
 
 [libraries]
+accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist-navigation-animation" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }

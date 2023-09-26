@@ -9,11 +9,10 @@ import javax.inject.Inject
 class ProductsRepositoryImpl @Inject constructor(
     private val api: MyApi
 ) : ProductsRepository {
-    override suspend fun getAllProducts(): List<Product> {
-        return api.getAllProducts().map { it.toProduct() }
-    }
-
     override suspend fun getProductsByCategory(category: String): List<Product> {
+        if (category == "all"){
+            return api.getAllProducts().map { it.toProduct() }
+        }
         return api.getProductsByCategory(category).map { it.toProduct() }
     }
 
