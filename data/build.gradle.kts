@@ -45,9 +45,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // ViewModel Compose
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-
     // Dagger-Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)

@@ -51,7 +51,8 @@ class HomeViewModel @Inject constructor(
         getProductsByCategoryUseCase("all").onEach { result ->
             when (result) {
                 is ResultOf.Success<*> -> {
-                    _allProductsState.value = ProductListState(products = result.data ?: emptyList())
+                    _allProductsState.value =
+                        ProductListState(products = result.data ?: emptyList())
                 }
 
                 is ResultOf.Failure -> {
@@ -66,7 +67,7 @@ class HomeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun getProductsByCategory(category: String) {
+    fun getProductsByCategory(category: String) {
         getProductsByCategoryUseCase(category).onEach { result ->
             when (result) {
                 is ResultOf.Success<*> -> {
@@ -84,6 +85,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+
     }
 
     private fun getAllCategories() {
@@ -91,8 +93,9 @@ class HomeViewModel @Inject constructor(
             when (result) {
                 is ResultOf.Success<*> -> {
                     _categoriesState.value = CategoriesListState(categories = result.data.orEmpty())
-                    if (result.data!!.isNotEmpty())
-                        getProductsByCategory(categoriesState.value.categories[0])
+                    if (_categoriesState.value.categories.isNotEmpty()) {
+                        getProductsByCategory(_categoriesState.value.categories[0])
+                    }
                 }
 
                 is ResultOf.Failure -> {

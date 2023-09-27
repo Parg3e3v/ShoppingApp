@@ -2,6 +2,7 @@ package com.parg3v.shoppingapp.view.home
 
 import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,8 +43,8 @@ import com.parg3v.shoppingapp.ui.theme.ShoppingAppTheme
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
     val itemsList by viewModel.highlyRatedProductsState.collectAsState()
-    val itemsListByCategory by viewModel.productsByCategoryState.collectAsState()
     val categories by viewModel.categoriesState.collectAsState()
+    val itemsListByCategory by viewModel.productsByCategoryState.collectAsState()
     val bannersList by viewModel.bannersState.collectAsState()
 
     HomeScreenUI(
@@ -56,7 +57,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navController: NavCon
 
 }
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreenUI(
@@ -68,7 +68,13 @@ fun HomeScreenUI(
 ) {
     ShoppingAppTheme {
         if (itemsList.error.isNotBlank() || itemsListByCategory.error.isNotBlank()) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            Box(
+                contentAlignment = Alignment.Center, modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Color.White
+                    )
+            ) {
                 Text(
                     text = stringResource(id = R.string.error_text),
                     color = Color.Black,
@@ -84,21 +90,16 @@ fun HomeScreenUI(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.products_list_vertical_space))
         ) {
-            AutoSlidingCarousel(
-                itemsCount = images?.size ?: 3,
-                itemContent = { index ->
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(images?.get(index))
-                            .build(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .height(dimensionResource(id = R.dimen.card_height)),
-                        placeholder = ColorPainter(Color.Gray)
-                    )
-                }
-            )
+            AutoSlidingCarousel(itemsCount = images?.size ?: 3, itemContent = { index ->
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current).data(images?.get(index))
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.height(dimensionResource(id = R.dimen.card_height)),
+                    placeholder = ColorPainter(Color.Gray)
+                )
+            })
 
             ProductsSection(
                 navController = navController,
@@ -133,19 +134,15 @@ fun Preview() {
         Rating(4.5F, 57)
     )
     HomeScreenUI(
-        navController = rememberNavController(),
-        itemsList = ProductListState(
+        navController = rememberNavController(), itemsList = ProductListState(
             products = listOf(
                 sampleProduct, sampleProduct, sampleProduct, sampleProduct
             )
-        ),
-        itemsListByCategory = ProductListState(
+        ), itemsListByCategory = ProductListState(
             products = listOf(
                 sampleProduct, sampleProduct, sampleProduct, sampleProduct
             )
-        ),
-        categories = CategoriesListState(categories = listOf("Jewelery")),
-        images = listOf(
+        ), categories = CategoriesListState(categories = listOf("Jewelery")), images = listOf(
             "https://png.pngtree.com/png-clipart/20220419/original/pngtree-red-festive-jewelry-poster-png-image_7538385.png",
             "https://png.pngtree.com/png-clipart/20220419/original/pngtree-red-festive-jewelry-poster-png-image_7538385.png",
             "https://png.pngtree.com/png-clipart/20220419/original/pngtree-red-festive-jewelry-poster-png-image_7538385.png",
