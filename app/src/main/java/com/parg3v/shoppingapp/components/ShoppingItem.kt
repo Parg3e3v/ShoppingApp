@@ -35,8 +35,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.parg3v.domain.model.DummyProduct
 import com.parg3v.domain.model.Product
-import com.parg3v.domain.model.Rating
 import com.parg3v.shoppingapp.R
 import com.parg3v.shoppingapp.ui.theme.CustomPurple
 
@@ -121,15 +121,7 @@ fun ShoppingItem(
 @Composable
 fun CardPreview() {
     ShoppingItem(
-        Product(
-            0,
-            "Title",
-            50F,
-            "50$",
-            "50$",
-            "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-            Rating(4.5F, 500)
-        ),
+        DummyProduct,
         Modifier,
         onButtonClick = {}
     ) {}

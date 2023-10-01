@@ -20,4 +20,5 @@
     <dimen name="product_details_screen_padding">20dp</dimen>
     <dimen name="product_details_space_between">10dp</dimen>
     <dimen name="product_details_description_padding">5dp</dimen>
+    <dimen name="product_details_add_to_cart_button_height">70dp</dimen>
 </resources>

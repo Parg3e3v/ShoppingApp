@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.flow
 import java.io.IOException
 import javax.inject.Inject
 
-class GetProductsByCategoryUseCase @Inject constructor(
+class GetProductsUseCase @Inject constructor(
     private val productsRepository: ProductsRepository
 ) {
     operator fun invoke(category: String): Flow<ResultOf<List<Product>>> = flow{
         try {
             emit(ResultOf.Loading())
-            val products = productsRepository.getProductsByCategory(category)
+            val products = productsRepository.getProducts(category)
             emit(ResultOf.Success(products))
         }catch (e: IOException){
             emit(ResultOf.Failure( "Couldn't get products by category"))

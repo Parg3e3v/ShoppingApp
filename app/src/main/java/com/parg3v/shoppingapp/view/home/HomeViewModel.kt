@@ -6,7 +6,7 @@ import com.parg3v.domain.common.ResultOf
 import com.parg3v.domain.use_cases.GetAllCategoriesUseCase
 import com.parg3v.domain.use_cases.GetBannersUseCase
 import com.parg3v.domain.use_cases.GetHighlyRatedProductsUseCase
-import com.parg3v.domain.use_cases.GetProductsByCategoryUseCase
+import com.parg3v.domain.use_cases.GetProductsUseCase
 import com.parg3v.shoppingapp.model.BannersListState
 import com.parg3v.shoppingapp.model.CategoriesListState
 import com.parg3v.shoppingapp.model.ProductListState
@@ -19,17 +19,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getProductsByCategoryUseCase: GetProductsByCategoryUseCase,
+    private val getProductsUseCase: GetProductsUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
     private val getHighlyRatedProductsUseCase: GetHighlyRatedProductsUseCase,
     private val getBannersUseCase: GetBannersUseCase
 ) : ViewModel() {
 
-    private val _allProductsState = MutableStateFlow(ProductListState())
-    val allProductsState: StateFlow<ProductListState> = _allProductsState
-
-    private val _productsByCategoryState = MutableStateFlow(ProductListState())
-    val productsByCategoryState: StateFlow<ProductListState> = _productsByCategoryState
+    private val _productsState = MutableStateFlow(ProductListState())
+    val productsState: StateFlow<ProductListState> = _productsState
 
     private val _categoriesState = MutableStateFlow(CategoriesListState())
     val categoriesState: StateFlow<CategoriesListState> = _categoriesState
@@ -41,61 +38,42 @@ class HomeViewModel @Inject constructor(
     val bannersState: StateFlow<BannersListState> = _bannersState
 
     init {
-        getProducts()
         getBanners()
-        getHighlyRatedProducts()
         getAllCategories()
+        getHighlyRatedProducts()
     }
 
-    private fun getProducts() {
-        getProductsByCategoryUseCase("all").onEach { result ->
+    private fun getProductsByCategory(category: String) {
+        getProductsUseCase(category).onEach { result ->
             when (result) {
                 is ResultOf.Success<*> -> {
-                    _allProductsState.value =
-                        ProductListState(products = result.data ?: emptyList())
+                    _productsState.value =
+                        ProductListState(products = result.data.orEmpty(), category = category)
                 }
 
                 is ResultOf.Failure -> {
-                    _allProductsState.value =
-                        ProductListState(error = result.message ?: "An unexpected error occurred")
+                    _productsState.value =
+                        ProductListState(
+                            error = result.message ?: "An unexpected error occurred",
+                            category = category
+                        )
                 }
 
                 is ResultOf.Loading -> {
-                    _allProductsState.value = ProductListState(isLoading = true)
+                    _productsState.value =
+                        ProductListState(isLoading = true, category = category)
                 }
             }
         }.launchIn(viewModelScope)
-    }
-
-    fun getProductsByCategory(category: String) {
-        getProductsByCategoryUseCase(category).onEach { result ->
-            when (result) {
-                is ResultOf.Success<*> -> {
-                    _productsByCategoryState.value =
-                        ProductListState(products = result.data ?: emptyList())
-                }
-
-                is ResultOf.Failure -> {
-                    _productsByCategoryState.value =
-                        ProductListState(error = result.message ?: "An unexpected error occurred")
-                }
-
-                is ResultOf.Loading -> {
-                    _productsByCategoryState.value = ProductListState(isLoading = true)
-                }
-            }
-        }.launchIn(viewModelScope)
-
     }
 
     private fun getAllCategories() {
         getAllCategoriesUseCase().onEach { result ->
             when (result) {
                 is ResultOf.Success<*> -> {
-                    _categoriesState.value = CategoriesListState(categories = result.data.orEmpty())
-                    if (_categoriesState.value.categories.isNotEmpty()) {
-                        getProductsByCategory(_categoriesState.value.categories[0])
-                    }
+                    _categoriesState.value =
+                        CategoriesListState(categories = result.data ?: listOf("all"))
+                    getProductsByCategory(category = categoriesState.value.categories.random())
                 }
 
                 is ResultOf.Failure -> {
@@ -117,7 +95,11 @@ class HomeViewModel @Inject constructor(
             when (result) {
                 is ResultOf.Success<*> -> {
                     _highlyRatedProductsState.value =
-                        ProductListState(products = result.data ?: emptyList())
+                        ProductListState(
+                            products = result.data.orEmpty(),
+                            /* TODO */
+                            category = "Best Celling"
+                        )
                 }
 
                 is ResultOf.Failure -> {
@@ -136,7 +118,7 @@ class HomeViewModel @Inject constructor(
         getBannersUseCase().onEach { result ->
             when (result) {
                 is ResultOf.Success<*> -> {
-                    _bannersState.value = BannersListState(banners = result.data ?: emptyList())
+                    _bannersState.value = BannersListState(banners = result.data.orEmpty())
                 }
 
                 is ResultOf.Failure -> {

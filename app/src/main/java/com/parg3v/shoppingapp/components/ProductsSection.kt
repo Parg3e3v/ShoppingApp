@@ -19,9 +19,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.parg3v.domain.model.Product
 import com.parg3v.shoppingapp.R
-import com.parg3v.shoppingapp.model.CategoriesListState
-import com.parg3v.shoppingapp.model.ProductListState
 import com.parg3v.shoppingapp.navigation.Screen
 import com.parg3v.shoppingapp.ui.theme.CustomPurple
 
@@ -30,22 +29,19 @@ import com.parg3v.shoppingapp.ui.theme.CustomPurple
 fun ProductsSection(
     navController: NavController,
     modifier: Modifier = Modifier,
-    itemList: ProductListState,
-    title: String = "",
-    categoriesListState: CategoriesListState = CategoriesListState(isLoading = false)
+    itemList: List<Product>,
+    title: String,
+    isLoading: Boolean
 ) {
 
     Column(modifier = modifier.wrapContentHeight()) {
-
-
-        Shimmer(isLoading = itemList.isLoading || categoriesListState.isLoading,
+        Shimmer(isLoading = isLoading,
             contentAfterLoading = {
                 ProductsSectionUI(
                     navController = navController,
                     modifier = Modifier,
                     itemList = itemList,
-                    title = title,
-                    categoriesListState = categoriesListState
+                    title = title.replaceFirstChar { it.uppercase() }
                 )
             },
             loadingComposable = {
@@ -53,7 +49,8 @@ fun ProductsSection(
                     modifier = Modifier,
                     item = { ShoppingItemPlaceholder() }
                 )
-            })
+            }
+        )
     }
 }
 
@@ -61,22 +58,18 @@ fun ProductsSection(
 fun ProductsSectionUI(
     navController: NavController,
     modifier: Modifier = Modifier,
-    itemList: ProductListState,
-    title: String,
-    categoriesListState: CategoriesListState
+    itemList: List<Product>,
+    title: String
 ) {
     val listRange = integerResource(id = R.integer.card_big_list_range)
-    val bigListSize = itemList.products.size > listRange
-    val labelText =
-        if (categoriesListState.categories.isEmpty()) title else categoriesListState.categories[0]
-            .replaceFirstChar { it.uppercase() }
+    val bigListSize = itemList.size > listRange
 
     Row(
         modifier = Modifier.wrapContentHeight(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = labelText,
+            text = title,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
                 .wrapContentWidth(Alignment.Start)
@@ -91,7 +84,7 @@ fun ProductsSectionUI(
                     .weight(1F)
             ) {
                 Text(
-                    text = stringResource(id = R.string.see_all_button),
+                    text = stringResource(id = R.string.see_all),
                     style = MaterialTheme.typography.labelMedium,
                     color = CustomPurple
                 )
@@ -105,8 +98,7 @@ fun ProductsSectionUI(
         ), modifier = modifier.fillMaxWidth()
     ) {
         items(
-            if (bigListSize) itemList.products.subList(0, listRange)
-            else itemList.products
+            if (bigListSize) itemList.subList(0, listRange) else itemList
         ) { item ->
             ShoppingItem(item = item, onButtonClick = {}) {
                 navController.navigate(Screen.InfoScreen.withArgsFromProduct(item))
