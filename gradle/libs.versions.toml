@@ -3,6 +3,7 @@ accompanist-navigation-animation = "0.25.0"
 activity-compose = "1.7.2"
 appcompat = "1.6.1"
 coil-compose = "2.4.0"
+compose-ratingBar = "2.1.1"
 converter-gson = "2.3.0"
 core-ktx = "1.10.1"
 dotsindicator = "5.0"
@@ -33,6 +34,7 @@ androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtim
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-viewmodel-compose" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
+compose-ratingBar = { module = "com.github.SmartToolFactory:Compose-RatingBar", version.ref = "compose-ratingBar" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converter-gson" }
 dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }

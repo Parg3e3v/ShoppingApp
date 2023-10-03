@@ -12,6 +12,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -30,6 +32,7 @@ import com.parg3v.shoppingapp.navigation.Screen
 @Composable
 fun CustomScaffold(
     navController: NavController,
+    snackbarHostState: SnackbarHostState,
     items: List<BottomNavItem> = listOf(
         BottomNavItem.Home,
         BottomNavItem.Explore,
@@ -41,7 +44,6 @@ fun CustomScaffold(
     var bottomBarState by rememberSaveable { (mutableStateOf(true)) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-
     bottomBarState = when (navBackStackEntry?.destination?.route) {
         Screen.InfoScreen.route + "/{product}" -> {
             false
@@ -53,6 +55,7 @@ fun CustomScaffold(
     }
     Box {
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             bottomBar = {
                 AnimatedVisibility(
                     visible = bottomBarState,
@@ -93,5 +96,4 @@ fun CustomScaffold(
             }
         )
     }
-
 }

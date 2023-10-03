@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.parg3v.shoppingapp.view.info
 
 import androidx.compose.animation.AnimatedContent
@@ -7,7 +5,10 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -17,6 +18,7 @@ import androidx.compose.animation.with
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,14 +36,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +58,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -72,20 +74,24 @@ import com.parg3v.shoppingapp.R
 import com.parg3v.shoppingapp.navigation.Screen
 import com.parg3v.shoppingapp.ui.theme.CustomPurple
 import com.parg3v.shoppingapp.ui.theme.ProductInfoText
+import com.smarttoolfactory.ratingbar.RatingBar
+import com.smarttoolfactory.ratingbar.model.FillShimmer
+import com.smarttoolfactory.ratingbar.model.GestureStrategy
+import com.smarttoolfactory.ratingbar.model.ShimmerEffect
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun InfoScreen(item: Product, navController: NavController, scaffoldState: BottomSheetScaffoldState) {
+fun InfoScreen(
+    item: Product, navController: NavController, snackbarHostState: SnackbarHostState
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         ProductDetailsUI(
-            item = item,
-            navController = navController,
-            scaffoldState = scaffoldState
+            item = item, navController = navController, snackbarHostState = snackbarHostState
         )
     }
 }
@@ -96,25 +102,36 @@ fun InfoScreen(item: Product, navController: NavController, scaffoldState: Botto
 fun ProductDetailsUI(
     item: Product,
     navController: NavController,
-    scaffoldState: BottomSheetScaffoldState
+    snackbarHostState: SnackbarHostState,
+    ratingColor: Color = Color(0xFFF3603F)
 ) {
     val scope = rememberCoroutineScope()
     val placeholder = painterResource(id = R.drawable.placeholder)
-    var count by remember { mutableStateOf(0) }
+    var count by remember { mutableStateOf(1) }
     var expendState by remember { mutableStateOf(false) }
+    val message = stringResource(id = R.string.added_to_cart)
     val rotationState by animateFloatAsState(
         targetValue = if (expendState) 180F else 0F, label = ""
     )
 
-    Box(
+    val shimColors = remember {
+        listOf(
+            ratingColor.copy(alpha = .9f),
+            ratingColor.copy(alpha = .6f),
+            ratingColor.copy(alpha = .9f),
+        )
+    }
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.product_details_screen_padding))
+            .padding(dimensionResource(id = R.dimen.product_details_screen_padding)),
+        verticalArrangement = Arrangement.Bottom
     ) {
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .align(Alignment.TopCenter),
+                .weight(1F),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.product_details_space_between)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -138,7 +155,10 @@ fun ProductDetailsUI(
                 Text(
                     text = item.title, style = ProductInfoText, modifier = Modifier.weight(6F)
                 )
-                IconButton(onClick = { /*TODO*/ }, modifier = Modifier.weight(1F)) {
+                IconButton(
+                    onClick = { /*TODO: Add to favourites in local Root database*/ },
+                    modifier = Modifier.weight(1F)
+                ) {
                     Icon(
                         painter = rememberVectorPainter(Icons.Outlined.FavoriteBorder),
                         contentDescription = stringResource(id = R.string.add_to_favourites)
@@ -151,13 +171,15 @@ fun ProductDetailsUI(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                IconButton(onClick = { if (count > 0) count-- }, enabled = count > 0) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icon_subtract),
-                        tint = if (count > 0) CustomPurple else Color.Gray,
-                        contentDescription = stringResource(id = R.string.subtract)
-                    )
-                }
+                Icon(
+                    modifier = Modifier
+                        .clickable { if (count > 1) count-- }
+                        .padding(end = dimensionResource(id = R.dimen.product_details_count_buttons_padding))
+                        .fillMaxHeight(),
+                    painter = painterResource(id = R.drawable.icon_subtract),
+                    tint = if (count > 1) CustomPurple else Color.Gray,
+                    contentDescription = stringResource(id = R.string.subtract)
+                )
 
                 Box(
                     modifier = Modifier
@@ -180,19 +202,21 @@ fun ProductDetailsUI(
                     ) { targetCount ->
                         Text(
                             style = MaterialTheme.typography.bodyMedium,
-                            text = targetCount.toString(),
+                            text = "$targetCount",
                             textAlign = TextAlign.Center
                         )
                     }
                 }
 
-                IconButton(onClick = { count++ }) {
-                    Icon(
-                        painter = rememberVectorPainter(image = Icons.Filled.Add),
-                        tint = CustomPurple,
-                        contentDescription = stringResource(id = R.string.add)
-                    )
-                }
+                Icon(
+                    modifier = Modifier
+                        .clickable { count++ }
+                        .padding(start = dimensionResource(id = R.dimen.product_details_count_buttons_padding))
+                        .fillMaxHeight(),
+                    painter = rememberVectorPainter(image = Icons.Filled.Add),
+                    tint = CustomPurple,
+                    contentDescription = stringResource(id = R.string.add)
+                )
 
                 Text(
                     modifier = Modifier.weight(1F),
@@ -209,56 +233,93 @@ fun ProductDetailsUI(
                     .background(Color.Gray)
             )
 
-            Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.product_details_description_padding))) {
+            Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.product_info_description_padding))) {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = stringResource(id = R.string.product_details))
+                        IconButton(
+                            onClick = { expendState = !expendState },
+                            modifier = Modifier.rotate(rotationState)
+                        ) {
+                            Icon(
+                                painter = rememberVectorPainter(image = Icons.Filled.KeyboardArrowDown),
+                                contentDescription = stringResource(id = R.string.see_more)
+                            )
+                        }
+                    }
+
+                    AnimatedVisibility(
+                        visible = expendState, enter = expandVertically() + fadeIn(
+                            initialAlpha = 0.3f
+                        ), exit = shrinkVertically() + fadeOut()
+                    ) {
+                        Text(
+                            text = item.description, modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+
+                Text(
+                    text = stringResource(id = R.string.reviews),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = dimensionResource(id = R.dimen.product_details_reviews_title_vertical_padding))
+                )
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = stringResource(id = R.string.product_details))
-                    IconButton(
-                        onClick = { expendState = !expendState },
-                        modifier = Modifier.rotate(rotationState)
-                    ) {
-                        Icon(
-                            painter = rememberVectorPainter(image = Icons.Filled.KeyboardArrowDown),
-                            contentDescription = stringResource(id = R.string.see_more)
-                        )
-                    }
-                }
-
-                AnimatedVisibility(
-                    visible = expendState, enter = expandVertically() + fadeIn(
-                        initialAlpha = 0.3f
-                    ), exit = shrinkVertically() + fadeOut()
-                ) {
-                    Text(
-                        text = item.description, modifier = Modifier.fillMaxWidth()
+                    Text(text = "${item.rating.count} " +
+                            stringResource(id = R.string.review).replaceFirstChar { it.lowercase() }
                     )
-                }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = stringResource(id = R.string.reviews))
-                Text(text = "${item.rating.rate}☆ with ${item.rating.count} reviews")
 
+                    Text(
+                        modifier = Modifier
+                            .weight(1F)
+                            .padding(horizontal = dimensionResource(id = R.dimen.product_details_rate_text_padding)),
+                        text = "${item.rating.rate}",
+                        textAlign = TextAlign.End,
+                    )
+
+                    RatingBar(
+                        rating = item.rating.rate,
+                        painterEmpty = painterResource(id = R.drawable.star_background),
+                        painterFilled = painterResource(id = R.drawable.star_foreground),
+                        gestureStrategy = GestureStrategy.None,
+                        itemSize = dimensionResource(id = R.dimen.product_details_ratingbar_size),
+                        shimmerEffect = ShimmerEffect(
+                            FillShimmer(
+                                colors = shimColors, animationSpec = infiniteRepeatable(
+                                    animation = tween(
+                                        durationMillis = integerResource(id = R.integer.rating_shimm_duration_milies),
+                                        easing = LinearEasing
+                                    ), repeatMode = RepeatMode.Restart
+                                ), solidBorder = true
+                            )
+                        )
+                    ) {}
+                }
             }
         }
+
         Button(
             onClick = {
                 addToCart(
                     navController = navController,
                     scope = scope,
-                    scaffoldState = scaffoldState
+                    snackbarHostState = snackbarHostState,
+                    message = message
                 )
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.product_details_add_to_cart_button_height))
-                .align(Alignment.BottomCenter)
         ) {
             Text(text = stringResource(id = R.string.add_to_cart))
         }
@@ -268,10 +329,14 @@ fun ProductDetailsUI(
 fun addToCart(
     navController: NavController,
     scope: CoroutineScope,
-    scaffoldState: BottomSheetScaffoldState
+    snackbarHostState: SnackbarHostState,
+    message: String
 ) {
+    // TODO: Add to cart in local Room database
+    scope.launch {
+        snackbarHostState.showSnackbar(message = message, duration = SnackbarDuration.Long)
+    }
     navController.navigate(Screen.HomeScreen.route)
-    scope.launch { scaffoldState.snackbarHostState.showSnackbar(message = "Added to Cart") }
 }
 
 @Preview
@@ -280,6 +345,6 @@ fun Preview() {
     InfoScreen(
         item = DummyProduct,
         navController = rememberNavController(),
-        scaffoldState = rememberBottomSheetScaffoldState()
+        snackbarHostState = SnackbarHostState()
     )
 }

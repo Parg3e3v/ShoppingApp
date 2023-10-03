@@ -11,4 +11,6 @@
     <string name="subtract">Հանել</string>
     <string name="add_to_favourites">Ավելացնել ընտրյալների մեջ</string>
     <string name="reviews">Արձագանքներ</string>
+    <string name="review">Արձագանք</string>
+    <string name="added_to_cart">Ավելացված է զամբյուղ</string>
 </resources>

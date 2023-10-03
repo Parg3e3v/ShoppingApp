@@ -9,8 +9,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -25,12 +24,12 @@ import com.parg3v.shoppingapp.view.favourite.FavouriteScreen
 import com.parg3v.shoppingapp.view.home.HomeScreen
 import com.parg3v.shoppingapp.view.info.InfoScreen
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    scaffoldState: BottomSheetScaffoldState
+    snackbarHostState: SnackbarHostState
 ) {
     AnimatedNavHost(
         navController = navController,
@@ -88,7 +87,7 @@ fun Navigation(
             val productJson = navBackStackEntry.arguments?.getString("product")
             val productObject = gson.fromJson(productJson, Product::class.java)
 
-            InfoScreen(productObject, navController, scaffoldState)
+            InfoScreen(productObject, navController, snackbarHostState)
         }
         composable(route = Screen.ExploreScreen.route) {
             ExploreScreen()

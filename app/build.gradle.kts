@@ -93,4 +93,7 @@ dependencies {
 
     // Navigation Animation
     implementation(libs.accompanist.navigation.animation)
+
+    //Rating Bar
+    implementation(libs.compose.ratingBar)
 }
