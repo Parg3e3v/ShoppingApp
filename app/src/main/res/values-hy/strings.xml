@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ShoppingApp</string>
+    <string name="add_to_cart">Ավելացնել Զամբյուղ</string>
+    <string name="error_text">Ինչ որ բան այնպես չգնաց. Ստուգեք ձեր ինտերնետային կապը</string>
+    <string name="see_all">Տեսնել ամբողջը</string>
+    <string name="text_loading">Բեռնում</string>
+    <string name="product_details">"Ապրանքի մանրամասերը "</string>
+    <string name="see_more">Տեսնել ավելին</string>
+    <string name="add">Ավելացնել</string>
+    <string name="subtract">Հանել</string>
+    <string name="add_to_favourites">Ավելացնել ընտրյալների մեջ</string>
+    <string name="reviews">Արձագանքներ</string>
+    <string name="review">Արձագանք</string>
+    <string name="added_to_cart">Ավելացված է զամբյուղ</string>
+</resources>
