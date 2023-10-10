@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.parg3v.shoppingapp.components.CustomScaffold
 import com.parg3v.shoppingapp.navigation.Navigation
+import com.parg3v.shoppingapp.ui.theme.ShoppingAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -18,10 +19,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val snackbarHostState = remember { SnackbarHostState() }
-            val navController: NavHostController = rememberAnimatedNavController()
-            CustomScaffold(navController = navController, snackbarHostState) {paddingValues ->
-                Navigation(navController, paddingValues, snackbarHostState)
+            ShoppingAppTheme {
+                val snackbarHostState = remember { SnackbarHostState() }
+                val navController: NavHostController = rememberAnimatedNavController()
+                CustomScaffold(navController = navController, snackbarHostState) { paddingValues ->
+                    Navigation(navController, paddingValues, snackbarHostState)
+                }
             }
         }
     }

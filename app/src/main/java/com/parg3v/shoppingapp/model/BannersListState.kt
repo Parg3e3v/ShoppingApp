@@ -1,7 +1,7 @@
 package com.parg3v.shoppingapp.model
 
 data class BannersListState(
-    val isLoading: Boolean = false,
-    val banners: List<String> = emptyList(),
-    val error: String = ""
-)
+    override val isLoading: Boolean = false,
+    override val data: List<String> = emptyList(),
+    override val error: String = ""
+) : State(isLoading, data, error)

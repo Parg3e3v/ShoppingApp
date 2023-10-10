@@ -12,5 +12,6 @@
     <string name="reviews">Reviews</string>
     <string name="review">Review</string>
     <string name="added_to_cart">Added to Cart</string>
+    <string name="back">back</string>
 
 </resources>

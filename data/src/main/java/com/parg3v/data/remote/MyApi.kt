@@ -15,4 +15,7 @@ interface MyApi {
 
     @GET(NetworkConfig.PATH_PRODUCTS + NetworkConfig.PATH_ALL_CATEGORIES)
     suspend fun getAllCategories(): List<String>
+
+    @GET(NetworkConfig.PATH_PRODUCTS + "/{id}")
+    suspend fun getProductById(@Path("id") id: String): ProductModel
 }

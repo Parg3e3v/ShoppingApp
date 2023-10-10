@@ -78,7 +78,7 @@ fun ProductsSectionUI(
         )
         if (bigListSize) {
             TextButton(
-                onClick = { /*TODO*/ },
+                onClick = { navigate(navController = navController, title) },
                 modifier = Modifier
                     .wrapContentWidth(Alignment.End)
                     .weight(1F)
@@ -101,8 +101,12 @@ fun ProductsSectionUI(
             if (bigListSize) itemList.subList(0, listRange) else itemList
         ) { item ->
             ShoppingItem(item = item, onButtonClick = {}) {
-                navController.navigate(Screen.InfoScreen.withArgsFromProduct(item))
+                navController.navigate(Screen.InfoScreen.withArgs(item.id.toString()))
             }
         }
     }
+}
+
+fun navigate(navController: NavController, definition: String) {
+    navController.navigate(Screen.GridScreen.withArgs(definition))
 }

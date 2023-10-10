@@ -25,4 +25,6 @@
     <dimen name="product_details_count_buttons_padding">10dp</dimen>
     <dimen name="product_details_rate_text_padding">5dp</dimen>
     <dimen name="product_details_ratingbar_size">15dp</dimen>
+    <dimen name="product_details_image_height">200dp</dimen>
+    <dimen name="product_grid_padding">15dp</dimen>
 </resources>

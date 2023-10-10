@@ -9,7 +9,7 @@ import com.parg3v.domain.use_cases.GetHighlyRatedProductsUseCase
 import com.parg3v.domain.use_cases.GetProductsUseCase
 import com.parg3v.shoppingapp.model.BannersListState
 import com.parg3v.shoppingapp.model.CategoriesListState
-import com.parg3v.shoppingapp.model.ProductListState
+import com.parg3v.shoppingapp.model.ProductsListState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,14 +25,14 @@ class HomeViewModel @Inject constructor(
     private val getBannersUseCase: GetBannersUseCase
 ) : ViewModel() {
 
-    private val _productsState = MutableStateFlow(ProductListState())
-    val productsState: StateFlow<ProductListState> = _productsState
+    private val _productsState = MutableStateFlow(ProductsListState())
+    val productsState: StateFlow<ProductsListState> = _productsState
 
     private val _categoriesState = MutableStateFlow(CategoriesListState())
     val categoriesState: StateFlow<CategoriesListState> = _categoriesState
 
-    private val _highlyRatedProductsState = MutableStateFlow(ProductListState())
-    val highlyRatedProductsState: StateFlow<ProductListState> = _highlyRatedProductsState
+    private val _highlyRatedProductsState = MutableStateFlow(ProductsListState())
+    val highlyRatedProductsState: StateFlow<ProductsListState> = _highlyRatedProductsState
 
     private val _bannersState = MutableStateFlow(BannersListState())
     val bannersState: StateFlow<BannersListState> = _bannersState
@@ -48,12 +48,12 @@ class HomeViewModel @Inject constructor(
             when (result) {
                 is ResultOf.Success<*> -> {
                     _productsState.value =
-                        ProductListState(products = result.data.orEmpty(), category = category)
+                        ProductsListState(data = result.data.orEmpty(), category = category)
                 }
 
                 is ResultOf.Failure -> {
                     _productsState.value =
-                        ProductListState(
+                        ProductsListState(
                             error = result.message ?: "An unexpected error occurred",
                             category = category
                         )
@@ -61,7 +61,7 @@ class HomeViewModel @Inject constructor(
 
                 is ResultOf.Loading -> {
                     _productsState.value =
-                        ProductListState(isLoading = true, category = category)
+                        ProductsListState(isLoading = true, category = category)
                 }
             }
         }.launchIn(viewModelScope)
@@ -72,8 +72,8 @@ class HomeViewModel @Inject constructor(
             when (result) {
                 is ResultOf.Success<*> -> {
                     _categoriesState.value =
-                        CategoriesListState(categories = result.data ?: listOf("all"))
-                    getProductsByCategory(category = categoriesState.value.categories.random())
+                        CategoriesListState(data = result.data ?: listOf("all"))
+                    getProductsByCategory(category = categoriesState.value.data.random())
                 }
 
                 is ResultOf.Failure -> {
@@ -95,8 +95,8 @@ class HomeViewModel @Inject constructor(
             when (result) {
                 is ResultOf.Success<*> -> {
                     _highlyRatedProductsState.value =
-                        ProductListState(
-                            products = result.data.orEmpty(),
+                        ProductsListState(
+                            data = result.data.orEmpty(),
                             /* TODO */
                             category = "Best Celling"
                         )
@@ -104,11 +104,11 @@ class HomeViewModel @Inject constructor(
 
                 is ResultOf.Failure -> {
                     _highlyRatedProductsState.value =
-                        ProductListState(error = result.message ?: "An unexpected error occurred")
+                        ProductsListState(error = result.message ?: "An unexpected error occurred")
                 }
 
                 is ResultOf.Loading -> {
-                    _highlyRatedProductsState.value = ProductListState(isLoading = true)
+                    _highlyRatedProductsState.value = ProductsListState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)
@@ -118,7 +118,7 @@ class HomeViewModel @Inject constructor(
         getBannersUseCase().onEach { result ->
             when (result) {
                 is ResultOf.Success<*> -> {
-                    _bannersState.value = BannersListState(banners = result.data.orEmpty())
+                    _bannersState.value = BannersListState(data = result.data.orEmpty())
                 }
 
                 is ResultOf.Failure -> {

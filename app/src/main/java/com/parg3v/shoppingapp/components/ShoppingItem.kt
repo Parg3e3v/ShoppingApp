@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -35,9 +34,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.parg3v.domain.model.DummyProduct
 import com.parg3v.domain.model.Product
 import com.parg3v.shoppingapp.R
+import com.parg3v.shoppingapp.model.dummyProduct
 import com.parg3v.shoppingapp.ui.theme.CustomPurple
 
 @Composable
@@ -54,9 +53,6 @@ fun ShoppingItem(
             .width(dimensionResource(id = R.dimen.card_width))
             .clip(RoundedCornerShape(cornerRadius))
             .clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
         border = BorderStroke(dimensionResource(id = R.dimen.card_border_size), Color.Gray),
         shape = RoundedCornerShape(percent = cornerRadius)
     ) {
@@ -121,7 +117,7 @@ fun ShoppingItem(
 @Composable
 fun CardPreview() {
     ShoppingItem(
-        DummyProduct,
+        dummyProduct(),
         Modifier,
         onButtonClick = {}
     ) {}

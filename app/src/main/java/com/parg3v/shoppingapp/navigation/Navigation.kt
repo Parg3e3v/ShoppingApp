@@ -13,14 +13,14 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.parg3v.domain.model.Product
 import com.parg3v.shoppingapp.view.cart.CartScreen
 import com.parg3v.shoppingapp.view.explore.ExploreScreen
 import com.parg3v.shoppingapp.view.favourite.FavouriteScreen
+import com.parg3v.shoppingapp.view.grid.GridScreen
 import com.parg3v.shoppingapp.view.home.HomeScreen
 import com.parg3v.shoppingapp.view.info.InfoScreen
 
@@ -60,34 +60,59 @@ fun Navigation(
         ) {
             HomeScreen(navController = navController)
         }
-        composable(
-            route = Screen.InfoScreen.route + "/{product}",
+        composable(route = "${Screen.InfoScreen.route}/{productId}",
+            arguments = listOf(navArgument("productId") {
+                type = NavType.StringType
+                defaultValue = "-1"
+                nullable = false
+            }),
 
             enterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -300 },
-                    animationSpec = tween(
-                        durationMillis = 300,
-                        easing = FastOutSlowInEasing
+                    initialOffsetX = { -300 }, animationSpec = tween(
+                        durationMillis = 300, easing = FastOutSlowInEasing
                     )
                 ) + fadeIn(animationSpec = tween(300))
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -300 },
-                    animationSpec = tween(
-                        durationMillis = 300,
-                        easing = FastOutSlowInEasing
+                    targetOffsetX = { -300 }, animationSpec = tween(
+                        durationMillis = 300, easing = FastOutSlowInEasing
                     )
                 ) + fadeOut(animationSpec = tween(300))
+            }) { entry ->
+            val productId = entry.arguments?.getString("productId")
+
+            productId?.let {
+                InfoScreen(
+                    productId = it,
+                    navController = navController,
+                    snackbarHostState = snackbarHostState
+                )
             }
-        ) { navBackStackEntry ->
+        }
+        composable(route = "${Screen.GridScreen.route}/{listDefinition}",
+            arguments = listOf(navArgument("listDefinition") {
+                type = NavType.StringType
+                defaultValue = "-1"
+                nullable = false
+            }),
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -300 }, animationSpec = tween(
+                        durationMillis = 300, easing = FastOutSlowInEasing
+                    )
+                ) + fadeIn(animationSpec = tween(300))
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -300 }, animationSpec = tween(
+                        durationMillis = 300, easing = FastOutSlowInEasing
+                    )
+                ) + fadeOut(animationSpec = tween(300))
+            }) { entry ->
 
-            val gson: Gson = GsonBuilder().create()
-            val productJson = navBackStackEntry.arguments?.getString("product")
-            val productObject = gson.fromJson(productJson, Product::class.java)
-
-            InfoScreen(productObject, navController, snackbarHostState)
+            entry.arguments?.getString("listDefinition")?.let { GridScreen(it, navController) }
         }
         composable(route = Screen.ExploreScreen.route) {
             ExploreScreen()

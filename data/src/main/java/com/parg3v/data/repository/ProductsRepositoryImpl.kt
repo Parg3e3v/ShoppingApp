@@ -19,4 +19,8 @@ class ProductsRepositoryImpl @Inject constructor(
     override suspend fun getAllCategories(): List<String> {
         return api.getAllCategories()
     }
+
+    override suspend fun getProductById(id: String): Product {
+        return api.getProductById(id).toProduct()
+    }
 }

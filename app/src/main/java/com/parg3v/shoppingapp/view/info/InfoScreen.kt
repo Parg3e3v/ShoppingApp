@@ -44,6 +44,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,13 +65,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.parg3v.domain.model.DummyProduct
-import com.parg3v.domain.model.Product
 import com.parg3v.shoppingapp.R
+import com.parg3v.shoppingapp.components.ErrorComposable
+import com.parg3v.shoppingapp.components.InfoScreenPlaceholder
+import com.parg3v.shoppingapp.components.Shimmer
+import com.parg3v.shoppingapp.model.ProductState
+import com.parg3v.shoppingapp.model.dummyProduct
 import com.parg3v.shoppingapp.navigation.Screen
 import com.parg3v.shoppingapp.ui.theme.CustomPurple
 import com.parg3v.shoppingapp.ui.theme.ProductInfoText
@@ -83,16 +89,32 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun InfoScreen(
-    item: Product, navController: NavController, snackbarHostState: SnackbarHostState
+    viewModel: InfoViewModel = hiltViewModel(),
+    productId: String, navController: NavController, snackbarHostState: SnackbarHostState
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.getProductById(productId)
+    }
+
+    val item by viewModel.productState.collectAsStateWithLifecycle()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
     ) {
-        ProductDetailsUI(
-            item = item, navController = navController, snackbarHostState = snackbarHostState
+        Shimmer(isLoading = item.isLoading,
+            contentAfterLoading = {
+                ProductDetailsUI(
+                    state = item,
+                    navController = navController,
+                    snackbarHostState = snackbarHostState
+                )
+            },
+            loadingComposable = {
+                InfoScreenPlaceholder()
+            }
         )
+
     }
 }
 
@@ -100,11 +122,15 @@ fun InfoScreen(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ProductDetailsUI(
-    item: Product,
+    state: ProductState,
     navController: NavController,
     snackbarHostState: SnackbarHostState,
     ratingColor: Color = Color(0xFFF3603F)
 ) {
+    if (state.error.isNotBlank()) {
+        ErrorComposable(state.error)
+        return
+    }
     val scope = rememberCoroutineScope()
     val placeholder = painterResource(id = R.drawable.placeholder)
     var count by remember { mutableStateOf(1) }
@@ -122,6 +148,9 @@ fun ProductDetailsUI(
         )
     }
 
+
+    val item = state.data
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -136,17 +165,17 @@ fun ProductDetailsUI(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.card_image_border_radius)))
+                    .fillMaxWidth()
+                    .height(dimensionResource(id = R.dimen.product_details_image_height)),
                 model = ImageRequest.Builder(LocalContext.current).data(item.image).crossfade(true)
                     .build(),
                 error = placeholder,
                 placeholder = placeholder,
                 contentDescription = item.title,
                 contentScale = ContentScale.Fit,
-                alignment = Alignment.Center,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.card_image_border_radius)))
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.4F)
+                alignment = Alignment.Center
             )
 
             Row(
@@ -342,8 +371,8 @@ fun addToCart(
 @Preview
 @Composable
 fun Preview() {
-    InfoScreen(
-        item = DummyProduct,
+    ProductDetailsUI(
+        state = ProductState(data = dummyProduct()),
         navController = rememberNavController(),
         snackbarHostState = SnackbarHostState()
     )

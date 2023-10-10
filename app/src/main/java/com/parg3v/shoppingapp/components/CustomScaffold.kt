@@ -23,8 +23,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.parg3v.shoppingapp.R
 import com.parg3v.shoppingapp.model.BottomNavItem
 import com.parg3v.shoppingapp.navigation.Screen
 
@@ -45,7 +47,11 @@ fun CustomScaffold(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     bottomBarState = when (navBackStackEntry?.destination?.route) {
-        Screen.InfoScreen.route + "/{product}" -> {
+        "${Screen.InfoScreen.route}/{productId}" -> {
+            false
+        }
+
+        "${Screen.GridScreen.route}/{listDefinition}" -> {
             false
         }
 
@@ -71,29 +77,31 @@ fun CustomScaffold(
                             }
                         )
                     })
+            },
+            topBar = {
+                AnimatedVisibility(
+                    visible = !bottomBarState,
+                    enter = slideInVertically(initialOffsetY = { -it }),
+                    exit = slideOutVertically(targetOffsetY = { -it }),
+                    content = {
+                        CenterAlignedTopAppBar(
+                            title = {},
+                            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                            navigationIcon = {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowBack,
+                                        contentDescription = stringResource(id = R.string.back)
+                                    )
+                                }
+                            },
+                            scrollBehavior = scrollBehavior
+                        )
+                    }
+                )
             }
         ) { paddingValues ->
             content(paddingValues)
         }
-        AnimatedVisibility(
-            visible = !bottomBarState,
-            enter = slideInVertically(initialOffsetY = { -it }),
-            exit = slideOutVertically(targetOffsetY = { -it }),
-            content = {
-                CenterAlignedTopAppBar(
-                    title = {},
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = "Localized description"
-                            )
-                        }
-                    },
-                    scrollBehavior = scrollBehavior
-                )
-            }
-        )
     }
 }

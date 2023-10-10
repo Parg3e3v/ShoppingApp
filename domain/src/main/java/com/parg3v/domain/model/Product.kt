@@ -43,3 +43,7 @@ val DummyProduct = Product(
     "https://static.vecteezy.com/system/resources/previews/008/847/318/non_2x/isolated-black-t-shirt-front-free-png.png",
     Rating(4.5F, 500)
 )
+
+val EmptyProduct = Product(
+    -1, "", -1F, "", "", "", Rating(-1F, -1)
+)
