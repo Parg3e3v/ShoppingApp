@@ -55,13 +55,15 @@ fun HomeScreenUI(
     itemsListByCategory: ProductsListState,
     images: List<String>?
 ) {
-    if (itemsList.error.isNotBlank() || itemsListByCategory.error.isNotBlank()) {
+    if (itemsList.error.asString().isNotBlank() ||
+        itemsListByCategory.error.asString().isNotBlank())
+    {
         Box(
             contentAlignment = Alignment.Center, modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
         ) {
-            ErrorComposable(itemsList.error, itemsListByCategory.error)
+            ErrorComposable(itemsList.error.asString(), itemsListByCategory.error.asString())
         }
         return
     }
@@ -90,7 +92,7 @@ fun HomeScreenUI(
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding)),
                 itemList = state.data,
                 isLoading = state.isLoading,
-                title = state.category
+                title = state.category.asString()
             )
         }
     }

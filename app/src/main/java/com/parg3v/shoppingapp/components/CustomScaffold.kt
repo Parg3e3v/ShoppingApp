@@ -14,6 +14,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.parg3v.shoppingapp.R
@@ -46,12 +48,14 @@ fun CustomScaffold(
     var bottomBarState by rememberSaveable { (mutableStateOf(true)) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val topAppBarTitle = navBackStackEntry?.arguments?.getString("topAppBarTitle")
+
     bottomBarState = when (navBackStackEntry?.destination?.route) {
         "${Screen.InfoScreen.route}/{productId}" -> {
             false
         }
 
-        "${Screen.GridScreen.route}/{listDefinition}" -> {
+        "${Screen.GridScreen.route}/{topAppBarTitle}" -> {
             false
         }
 
@@ -59,6 +63,7 @@ fun CustomScaffold(
             true
         }
     }
+
     Box {
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -85,7 +90,13 @@ fun CustomScaffold(
                     exit = slideOutVertically(targetOffsetY = { -it }),
                     content = {
                         CenterAlignedTopAppBar(
-                            title = {},
+                            title = {
+                                Text(
+                                    topAppBarTitle.orEmpty(),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            },
                             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
                             navigationIcon = {
                                 IconButton(onClick = { navController.popBackStack() }) {

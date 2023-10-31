@@ -107,6 +107,6 @@ fun ProductsSectionUI(
     }
 }
 
-fun navigate(navController: NavController, definition: String) {
-    navController.navigate(Screen.GridScreen.withArgs(definition))
+fun navigate(navController: NavController, category: String) {
+    navController.navigate(Screen.GridScreen.withArgs(category))
 }

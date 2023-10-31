@@ -13,5 +13,7 @@
     <string name="review">Review</string>
     <string name="added_to_cart">Added to Cart</string>
     <string name="back">back</string>
+    <string name="best_selling">Best Selling</string>
+    <string name="error_basic">An unexpected error occurred</string>
 
 </resources>

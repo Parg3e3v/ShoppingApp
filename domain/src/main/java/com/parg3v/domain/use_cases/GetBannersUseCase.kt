@@ -16,7 +16,7 @@ class GetBannersUseCase @Inject constructor(
             val banners = bannersRepository.getBanners()
             emit(ResultOf.Success(banners))
         }catch (e: IOException){
-            emit(ResultOf.Failure("Something went wrong. Check your internet connection"))
+            emit(ResultOf.Failure("Couldn't get banners from server."))
         }
     }
 }

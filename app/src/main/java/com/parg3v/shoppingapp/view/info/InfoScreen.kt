@@ -127,8 +127,8 @@ fun ProductDetailsUI(
     snackbarHostState: SnackbarHostState,
     ratingColor: Color = Color(0xFFF3603F)
 ) {
-    if (state.error.isNotBlank()) {
-        ErrorComposable(state.error)
+    if (state.error.asString().isNotBlank()) {
+        ErrorComposable(state.error.asString())
         return
     }
     val scope = rememberCoroutineScope()

@@ -14,4 +14,6 @@
     <string name="review">Արձագանք</string>
     <string name="added_to_cart">Ավելացված է զամբյուղ</string>
     <string name="back">հետ</string>
+    <string name="best_selling">Լավագույն Վաճառք</string>
+    <string name="error_basic">Տեղի ունեցավ անսպասելի սխալ</string>
 </resources>

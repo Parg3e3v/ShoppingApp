@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.parg3v.domain.common.ResultOf
 import com.parg3v.domain.use_cases.GetProductByIdUseCase
+import com.parg3v.shoppingapp.R
 import com.parg3v.shoppingapp.model.ProductState
 import com.parg3v.shoppingapp.model.emptyProduct
+import com.parg3v.shoppingapp.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +27,10 @@ class InfoViewModel @Inject constructor(
             when (result) {
                 is ResultOf.Failure -> {
                     _productState.value =
-                        ProductState(error = result.message ?: "An unexpected error occurred")
+                        ProductState(
+                            error = result.message?.let { UiText.DynamicString(it) } ?: run {
+                                UiText.StringResource(R.string.error_basic)
+                            })
                 }
 
                 is ResultOf.Loading -> {

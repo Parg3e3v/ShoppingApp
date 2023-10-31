@@ -91,8 +91,8 @@ fun Navigation(
                 )
             }
         }
-        composable(route = "${Screen.GridScreen.route}/{listDefinition}",
-            arguments = listOf(navArgument("listDefinition") {
+        composable(route = "${Screen.GridScreen.route}/{topAppBarTitle}",
+            arguments = listOf(navArgument("topAppBarTitle") {
                 type = NavType.StringType
                 defaultValue = "-1"
                 nullable = false
@@ -112,7 +112,7 @@ fun Navigation(
                 ) + fadeOut(animationSpec = tween(300))
             }) { entry ->
 
-            entry.arguments?.getString("listDefinition")?.let { GridScreen(it, navController) }
+            entry.arguments?.getString("topAppBarTitle")?.let { GridScreen(it, navController) }
         }
         composable(route = Screen.ExploreScreen.route) {
             ExploreScreen()

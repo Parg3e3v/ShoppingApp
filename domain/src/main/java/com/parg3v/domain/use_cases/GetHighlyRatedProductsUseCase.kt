@@ -19,7 +19,7 @@ class GetHighlyRatedProductsUseCase @Inject constructor(
                 .sortedByDescending { it.rating.rate }
             emit(ResultOf.Success(products))
         }catch (e: IOException){
-            emit(ResultOf.Failure("Something went wrong. Check your internet connection"))
+            emit(ResultOf.Failure("Couldn't get products from server"))
         }
     }
 

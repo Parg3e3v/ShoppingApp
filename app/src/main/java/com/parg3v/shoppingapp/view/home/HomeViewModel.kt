@@ -7,9 +7,11 @@ import com.parg3v.domain.use_cases.GetAllCategoriesUseCase
 import com.parg3v.domain.use_cases.GetBannersUseCase
 import com.parg3v.domain.use_cases.GetHighlyRatedProductsUseCase
 import com.parg3v.domain.use_cases.GetProductsUseCase
+import com.parg3v.shoppingapp.R
 import com.parg3v.shoppingapp.model.BannersListState
 import com.parg3v.shoppingapp.model.CategoriesListState
 import com.parg3v.shoppingapp.model.ProductsListState
+import com.parg3v.shoppingapp.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,24 +46,27 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getProductsByCategory(category: String) {
+        val categoryUiText = UiText.DynamicString(category)
         getProductsUseCase(category).onEach { result ->
             when (result) {
                 is ResultOf.Success<*> -> {
                     _productsState.value =
-                        ProductsListState(data = result.data.orEmpty(), category = category)
+                        ProductsListState(data = result.data.orEmpty(), category = categoryUiText)
                 }
 
                 is ResultOf.Failure -> {
                     _productsState.value =
                         ProductsListState(
-                            error = result.message ?: "An unexpected error occurred",
-                            category = category
+                            error = result.message?.let { UiText.DynamicString(it) } ?: run {
+                                UiText.StringResource(R.string.error_basic)
+                            },
+                            category = categoryUiText
                         )
                 }
 
                 is ResultOf.Loading -> {
                     _productsState.value =
-                        ProductsListState(isLoading = true, category = category)
+                        ProductsListState(isLoading = true, category = categoryUiText)
                 }
             }
         }.launchIn(viewModelScope)
@@ -79,7 +84,9 @@ class HomeViewModel @Inject constructor(
                 is ResultOf.Failure -> {
                     _categoriesState.value =
                         CategoriesListState(
-                            error = result.message ?: "An unexpected error occurred"
+                            error = result.message?.let { UiText.DynamicString(it) } ?: run {
+                                UiText.StringResource(R.string.error_basic)
+                            }
                         )
                 }
 
@@ -97,14 +104,16 @@ class HomeViewModel @Inject constructor(
                     _highlyRatedProductsState.value =
                         ProductsListState(
                             data = result.data.orEmpty(),
-                            /* TODO */
-                            category = "Best Celling"
+                            category = UiText.StringResource(R.string.best_selling)
                         )
                 }
 
                 is ResultOf.Failure -> {
                     _highlyRatedProductsState.value =
-                        ProductsListState(error = result.message ?: "An unexpected error occurred")
+                        ProductsListState(error = result.message?.let { UiText.DynamicString(it) }
+                            ?: run {
+                                UiText.StringResource(R.string.error_basic)
+                            })
                 }
 
                 is ResultOf.Loading -> {
@@ -123,7 +132,9 @@ class HomeViewModel @Inject constructor(
 
                 is ResultOf.Failure -> {
                     _bannersState.value =
-                        BannersListState(error = result.message ?: "An unexpected error occurred")
+                        BannersListState(error = result.message?.let { UiText.DynamicString(it) } ?: run {
+                            UiText.StringResource(R.string.error_basic)
+                        })
                 }
 
                 is ResultOf.Loading -> {
